@@ -56,21 +56,23 @@
     }
 
     .buttons {
-      margin-top: 2em;
+      margin-top: 2.5em;
       display: flex;
       justify-content: center;
-      gap: 4em;
+      gap: 6em;
       position: relative;
+      width: 100%;
     }
 
     button {
-      font-size: 1.8em;
-      padding: 15px 50px;
+      font-size: 1.9em;
+      padding: 18px 60px;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      user-select: none;
     }
 
     #yesBtn {
@@ -80,14 +82,17 @@
 
     #yesBtn:hover {
       background: #c0392b;
-      transform: scale(1.1);
+      transform: scale(1.12);
     }
 
     #noBtn {
       background: #7f8c8d;
       color: white;
-      position: relative;
-      user-select: none;
+      position: absolute;
+      left: 60%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
     }
 
     #noBtn:hover {
@@ -100,8 +105,8 @@
 
     #success {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255, 105, 180, 0.95);
+      inset: 0;
+      background: rgba(255, 105, 180, 0.92);
       display: none;
       align-items: center;
       justify-content: center;
@@ -116,14 +121,14 @@
 
     .hearts-bg {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       pointer-events: none;
       overflow: hidden;
     }
 
     .heart-float {
       position: absolute;
-      font-size: 3em;
+      font-size: 2.8em;
       color: rgba(255, 100, 100, 0.9);
       animation: float 12s linear infinite;
     }
@@ -131,7 +136,7 @@
     @keyframes float {
       0% { transform: translateY(120vh) rotate(0deg); opacity: 0; }
       10% { opacity: 1; }
-      100% { transform: translateY(-20vh) rotate(720deg); opacity: 0; }
+      100% { transform: translateY(-20vh) rotate(1080deg); opacity: 0; }
     }
   </style>
 </head>
@@ -141,72 +146,86 @@
 
   <div class="container">
     <div class="big-heart">💖</div>
-    <h1>My Dearest Bhanu...</h1>
-    <p>You make every day brighter, every moment sweeter.</p>
-    <p>Your smile is my favorite thing in the world.</p>
-    <p style="font-size: 2.2em; margin: 1.5em 0;">
+    <h1>Hey Bhanu...</h1>
+    <p>You make my heart smile every single day.</p>
+    <p>Your laugh, your eyes, your everything... I can't imagine a day without you.</p>
+    <p style="font-size: 2.3em; margin: 1.8em 0;">
       Will you be my Valentine? 💕<br>
-      (and forever after that? 😊)
+      (and maybe my forever too?) 🥰
     </p>
 
     <div class="buttons">
-      <button id="yesBtn">Yes! 💞</button>
+      <button id="yesBtn">Yes!! 💞</button>
       <button id="noBtn">No 😔</button>
     </div>
   </div>
 
   <div id="success">
     <div class="big-heart">❤️❤️❤️</div>
-    <h1>Yayyy! 💖💖💖</h1>
-    <p style="font-size: 2em;">I love you so much, Bhanu! 🥰</p>
-    <p>You just made me the happiest person alive!</p>
+    <h1>Yayyyy!! 💖💖</h1>
+    <p style="font-size: 2.2em;">I love you so much, Bhanu! 😍</p>
+    <p>You just made me the happiest guy alive!</p>
   </div>
 
   <script>
-    // Floating hearts background
+    // Floating hearts
     function createHeart() {
       const heart = document.createElement("div");
       heart.className = "heart-float";
-      heart.innerHTML = ["💞", "❤️", "💗", "💓", "💕", "💘"][Math.floor(Math.random()*6)];
+      heart.innerHTML = ["💞","❤️","💗","💓","💕","💘"][Math.floor(Math.random()*6)];
       heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 6 + 8) + "s";
-      heart.style.animationDelay = Math.random() * 5 + "s";
+      heart.style.animationDuration = (Math.random() * 7 + 9) + "s";
+      heart.style.animationDelay = Math.random() * 6 + "s";
       document.getElementById("heartsBg").appendChild(heart);
-      setTimeout(() => heart.remove(), 20000);
+      setTimeout(() => heart.remove(), 25000);
     }
-    setInterval(createHeart, 400);
+    setInterval(createHeart, 350);
 
-    // Yes button → show love!
+    // Yes → show love
     document.getElementById("yesBtn").addEventListener("click", () => {
       document.getElementById("success").classList.add("show");
     });
 
-    // No button dodges forever
+    // No button keeps moving around when cursor is near
     const noBtn = document.getElementById("noBtn");
+    let moveInterval = null;
 
-    noBtn.addEventListener("mouseover", (e) => {
-      const btnRect = noBtn.getBoundingClientRect();
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
+    function moveNoButton() {
+      const maxX = window.innerWidth - noBtn.offsetWidth - 40;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 40;
 
-      // Move away from cursor direction
-      let newX = btnRect.left + (Math.random() * 200 - 100); // random left/right
-      let newY = btnRect.top + (Math.random() * 200 - 100);  // random up/down
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
 
-      // Keep within screen bounds
-      newX = Math.max(50, Math.min(newX, window.innerWidth - btnRect.width - 50));
-      newY = Math.max(50, Math.min(newY, window.innerHeight - btnRect.height - 50));
-
-      noBtn.style.position = "absolute";
       noBtn.style.left = newX + "px";
       noBtn.style.top = newY + "px";
+      noBtn.style.transform = "translate(0, 0)";
+    }
+
+    // Start gentle random movement every 2 seconds
+    moveInterval = setInterval(moveNoButton, 2200);
+
+    // When mouse gets close → move away faster
+    document.addEventListener("mousemove", (e) => {
+      const rect = noBtn.getBoundingClientRect();
+      const distX = Math.abs(e.clientX - (rect.left + rect.width / 2));
+      const distY = Math.abs(e.clientY - (rect.top + rect.height / 2));
+      const distance = Math.sqrt(distX * distX + distY * distY);
+
+      if (distance < 120) {  // if cursor is within ~120px
+        moveNoButton();       // jump away immediately
+      }
     });
 
-    // Extra: if somehow clicked (very hard), prevent it
+    // Prevent clicking no (extra safety)
     noBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      alert("Oops! Try again... 😏");
+      moveNoButton();
+      alert("Hey! You can't catch me that easily 😏");
     });
+
+    // Make sure button stays visible and can't be clicked via tab/focus
+    noBtn.addEventListener("focus", () => noBtn.blur());
   </script>
 
 </body>
